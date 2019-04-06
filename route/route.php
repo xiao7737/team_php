@@ -15,8 +15,8 @@ Route::get('think', function () {
 
 Route::get('hello/:name', 'index/hello');
 
-Route::get('admin_register', 'admin/admin/register');
-Route::get('admin_login', 'admin/admin/login');
+Route::get('admin_register', 'admin/admin/register')->allowCrossDomain();;
+Route::get('admin_login', 'admin/admin/login')->allowCrossDomain();;
 
 return [
 
