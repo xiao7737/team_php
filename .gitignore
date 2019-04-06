@@ -6,4 +6,4 @@ thinkphp
 .env
 .DS_Store
 /runtime
-/config/database.php
+/config
