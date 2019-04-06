@@ -17,6 +17,7 @@ Route::get('hello/:name', 'index/hello');
 
 Route::get('admin_register', 'admin/admin/register');
 Route::get('admin_login', 'admin/admin/login');//->allowCrossDomain();  //设置跨域访问
+Route::get('admin_update_pw', 'admin/admin/updatePw');   //管理员修改密码
 
 return [
 

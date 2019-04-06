@@ -71,8 +71,8 @@ class Admin extends Controller
      */
     public function login()        //也可以使用在方法中使用依赖注入
     {
-        $account = Request::param('account', 'admin1');
-        $pw      = Request::param('pw', 'admin1');
+        $account = Request::param('account');
+        $pw      = Request::param('pw');
         $res     = AdminModel::where('account', $account)
             ->where('pw', $pw)
             ->field('id')
@@ -84,8 +84,35 @@ class Admin extends Controller
     }
 
 
-    //todo 修改密码，验证旧密码，存入新密码
-    public function updatePw(){
+    /**
+     * @return \think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function updatePw()
+    {
+        $account = Request::param('account', 'admin1');
+        $old_pw  = Request::param('pw', 'admin1');
+        $new_pw  = Request::param('pw', 'admin1');
+        if ($old_pw == $new_pw)
+            return json(['msg' => '新密码和旧密码一致', 'status' => 4]);
 
+        $res = AdminModel::where('account', $account)
+            ->where('pw', $old_pw)
+            ->field('id')
+            ->find();
+        if ($res) {
+            $updateRes = AdminModel::where('id', $res['id'])
+                ->update(['pw' => $new_pw]);
+            if ($updateRes) {
+                return json(['msg' => '重置密码成功', 'status' => 1]);
+            } else {
+                return json(['msg' => 'server error', 'status' => 2]);
+            }
+        }
+        return json(['msg' => '密码或账号错误', 'status' => 3]);
     }
 }
