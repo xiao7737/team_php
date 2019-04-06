@@ -15,8 +15,8 @@ Route::get('think', function () {
 
 Route::get('hello/:name', 'index/hello');
 
-Route::get('admin_register', 'admin/admin/register')->allowCrossDomain();;
-Route::get('admin_login', 'admin/admin/login')->allowCrossDomain();;
+Route::get('admin_register', 'admin/admin/register');
+Route::get('admin_login', 'admin/admin/login')->allowCrossDomain();  //设置跨域访问
 
 return [
 
