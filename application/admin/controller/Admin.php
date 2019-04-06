@@ -52,7 +52,7 @@ class Admin extends Controller
         $adminID = Db('admin')
             ->insert([
                 'account'     => $account,
-                'pw'          => $pw,
+                'pw'          => md5($pw),
                 'question'    => $question,
                 'question_pw' => $question_pw,
             ]);
@@ -74,7 +74,7 @@ class Admin extends Controller
         $account = Request::param('account');
         $pw      = Request::param('pw');
         $res     = AdminModel::where('account', $account)
-            ->where('pw', $pw)
+            ->where('pw', md5($pw))
             ->field('id')
             ->find();
         if ($res) {
@@ -101,12 +101,12 @@ class Admin extends Controller
             return json(['msg' => '新密码和旧密码一致', 'status' => 4]);
 
         $res = AdminModel::where('account', $account)
-            ->where('pw', $old_pw)
+            ->where('pw', md5($old_pw))
             ->field('id')
             ->find();
         if ($res) {
             $updateRes = AdminModel::where('id', $res['id'])
-                ->update(['pw' => $new_pw]);
+                ->update(['pw' => md5($new_pw)]);
             if ($updateRes) {
                 return json(['msg' => '重置密码成功', 'status' => 1]);
             } else {
