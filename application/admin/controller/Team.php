@@ -18,6 +18,7 @@ namespace app\admin\controller;
 use think\Controller;
 use app\admin\model\Team as TeamModel;
 use app\admin\model\Admin as AdminModel;
+use think\Db;
 use think\facade\Request;
 
 /**
@@ -49,15 +50,19 @@ class Team extends Controller
         }
 
         //todo 创建球队成功后，更新admin表，将该用户的is_admin+1,用事务处理
-        $teamID = Db('team')
-            ->insert([
+        Db::startTrans();
+        try {
+            Db('team')->insert([
                 'team_name'        => $team_name,
                 'description'      => $description,
                 'create_people_id' => $create_people_id,
             ]);
-        if ($teamID) {
+            AdminModel::where('id', $create_people_id)->setInc('is_admin');
+            Db::commit();
             return json(['msg' => '创建球队成功', 'status' => 1]);
-        } else {
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
             return json(['msg' => '创建球队失败', 'status' => 2]);
         }
     }

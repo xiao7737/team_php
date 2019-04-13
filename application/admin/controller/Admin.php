@@ -46,7 +46,7 @@ class Admin extends Controller
 
         $data = AdminModel::where('account', $account)->find();
         if ($data) {
-            return json(['msg' => '该账号已经注册,请直接登录']);
+            return json(['msg' => '该账号已经注册,请直接登录', 'status' => 3]);
         }
         //插入数据库
         $adminID = Db('admin')
@@ -80,7 +80,7 @@ class Admin extends Controller
 
         $data = [
             'user_id'  => $res['id'],
-            'is_admin' => $res['is_admin']     //1 管理员，0 普通球员
+            'is_admin' => $res['is_admin']     //1 管理员，0 普通球员,-1 新注册用户，即非球员非管理员
         ];
         if ($res) {
             return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);

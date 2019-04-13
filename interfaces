@@ -1,0 +1,22 @@
+1.用户登录
+    地址: http://39.108.222.100/team_php/public/index.php/admin_login
+    方式：post
+    参数：account    账号（一般为手机号码）
+         pw         密码
+    返回：msg        详细信息
+         status     状态码（1：注册成功，2：注册失败，3：该账号已经注册,请直接登录）
+
+2.用户注册
+3.用户更新密码
+4.添加用户信息（未添加）
+5.更新用户信息（未添加）
+6.创建球队
+    地址: http://39.108.222.100/team_php/public/index.php/team/add_team
+        参数：team_name           球队名称
+             description         球队简介
+             create_people_id    创建人id
+        返回：msg        详细信息
+             status     状态码（1：注册成功，2：注册失败，3：该账号已经注册,请直接登录）
+7.删除球队
+8.查看球队
+9.修改球队
