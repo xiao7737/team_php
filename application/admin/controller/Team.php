@@ -59,12 +59,12 @@ class Team extends Controller
             ]);
             AdminModel::where('id', $create_people_id)->setInc('is_admin');
             Db::commit();
-            return json(['msg' => '创建球队成功', 'status' => 1]);
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
             return json(['msg' => '创建球队失败', 'status' => 2]);
         }
+        return json(['msg' => '创建球队成功', 'status' => 1]);
     }
 
     //根据球队管理管id获取所属球队列表
