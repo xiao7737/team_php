@@ -50,18 +50,15 @@ class Team extends Controller
         }
 
         //创建球队成功后，更新admin表，将该用户的is_admin+1
-        Db::startTrans();
-        try {
-            Db('team')->insert([
+        $res = Db::transaction(function () use ($team_name, $description, $create_people_id) {
+            Db::table('team_team')->insert([
                 'team_name'        => $team_name,
                 'description'      => $description,
                 'create_people_id' => $create_people_id,
             ]);
-            AdminModel::where('id', $create_people_id)->setInc('is_admin');
-            Db::commit();
-        } catch (\Exception $e) {
-            // 回滚事务
-            Db::rollback();
+            Db::table('team_admin')->where('id', $create_people_id)->setInc('is_admin');
+        });
+        if (!$res) {
             return json(['msg' => '创建球队失败', 'status' => 2]);
         }
         return json(['msg' => '创建球队成功', 'status' => 1]);
