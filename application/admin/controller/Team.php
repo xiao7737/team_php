@@ -42,14 +42,14 @@ class Team extends Controller
 
         $data = TeamModel::where('team_name', $team_name)->find();
         if ($data) {
-            return json(['msg' => '该球队名已经被注册，请换一个球队名吧！']);
+            return json(['msg' => '该球队名已经被注册，请换一个球队名吧！', 'status' => 4]);
         }
         $findPeople = AdminModel::where('id', $create_people_id)->find();
         if ($findPeople) {
-            return json(['msg' => '当前用户没有球队的权限']);
+            return json(['msg' => '当前用户没有球队的权限', 'status' => 3]);
         }
 
-        //todo 创建球队成功后，更新admin表，将该用户的is_admin+1,用事务处理
+        //创建球队成功后，更新admin表，将该用户的is_admin+1
         Db::startTrans();
         try {
             Db('team')->insert([
