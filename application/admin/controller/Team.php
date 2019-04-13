@@ -55,6 +55,7 @@ class Team extends Controller
                 'team_name'        => $team_name,
                 'description'      => $description,
                 'create_people_id' => $create_people_id,
+                'create_time'      => date('Y-m-d', time())
             ]);
             Db::table('team_admin')->where('id', $create_people_id)->setInc('is_admin');
         });
