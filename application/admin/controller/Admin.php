@@ -75,12 +75,18 @@ class Admin extends Controller
         $pw      = Request::param('pw');
         $res     = AdminModel::where('account', $account)
             ->where('pw', md5($pw))
-            ->field('id')
+            ->field('id, is_admin')
             ->find();
+
+        $data = [
+            'admin'    => $res['id'],
+            'is_admin' => $res['is_admin']
+        ];
         if ($res) {
-            return json(['msg' => '登录成功', 'status' => 1, 'adminID' => $res['id']]);
+            return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);
+
         }
-        return json(['msg' => '密码或账号错误', 'status' => 2, 'adminID' => '']);
+        return json(['msg' => '密码或账号错误', 'status' => 2]);
     }
 
 
@@ -94,11 +100,12 @@ class Admin extends Controller
      */
     public function updatePw()
     {
-        $account = Request::param('account', 'admin1');
-        $old_pw  = Request::param('pw', 'admin1');
-        $new_pw  = Request::param('pw', 'admin1');
-        if ($old_pw == $new_pw)
+        $account = Request::param('account');
+        $old_pw  = Request::param('old_pw');
+        $new_pw  = Request::param('new_pw');
+        if ($old_pw == $new_pw) {
             return json(['msg' => '新密码和旧密码一致', 'status' => 4]);
+        }
 
         $res = AdminModel::where('account', $account)
             ->where('pw', md5($old_pw))
@@ -107,6 +114,7 @@ class Admin extends Controller
         if ($res) {
             $updateRes = AdminModel::where('id', $res['id'])
                 ->update(['pw' => md5($new_pw)]);
+
             if ($updateRes) {
                 return json(['msg' => '重置密码成功', 'status' => 1]);
             } else {
