@@ -59,10 +59,11 @@ class Team extends Controller
             ]);
             Db::table('team_admin')->where('id', $create_people_id)->setInc('is_admin');
         });
-        if (!$res) {
+        if ($res) {
+            return json(['msg' => '创建球队成功', 'status' => 1]);
+        } else {
             return json(['msg' => '创建球队失败', 'status' => 2]);
         }
-        return json(['msg' => '创建球队成功', 'status' => 1]);
     }
 
     //根据球队管理管id获取所属球队列表
