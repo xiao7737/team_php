@@ -79,13 +79,13 @@ class Admin extends Controller
             ->find();
 
         $data = [
-            'admin'    => $res['id'],
-            'is_admin' => $res['is_admin']
+            'user_id'  => $res['id'],
+            'is_admin' => $res['is_admin']     //1 管理员，0 普通球员
         ];
         if ($res) {
             return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);
-
         }
+
         return json(['msg' => '密码或账号错误', 'status' => 2]);
     }
 
