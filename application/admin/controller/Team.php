@@ -45,7 +45,7 @@ class Team extends Controller
             return json(['msg' => '该球队名已经被注册，请换一个球队名吧！', 'status' => 4]);
         }
         $findPeople = AdminModel::where('id', $create_people_id)->find();
-        if ($findPeople) {
+        if (!$findPeople) {
             return json(['msg' => '当前用户没有球队的权限', 'status' => 3]);
         }
 
