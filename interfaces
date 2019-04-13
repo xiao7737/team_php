@@ -1,5 +1,7 @@
+baseUrl:http://39.108.222.100/team_php/public/index.php
+
 1.用户登录
-    地址: http://39.108.222.100/team_php/public/index.php/admin_login
+    地址: /admin_login
     方式：post
     参数：account    账号（一般为手机号码）
          pw         密码
@@ -11,7 +13,7 @@
 4.添加用户信息（未添加）
 5.更新用户信息（未添加）
 6.创建球队
-    地址: http://39.108.222.100/team_php/public/index.php/team/add_team
+    地址: /team/add_team
         参数：team_name           球队名称
              description         球队简介
              create_people_id    创建人id
