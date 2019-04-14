@@ -20,6 +20,7 @@ use app\admin\model\Team as TeamModel;
 use app\admin\model\Admin as AdminModel;
 use think\Db;
 use think\facade\Request;
+use think\facade\Validate;
 
 /**
  * Class Team 球队管理
@@ -75,10 +76,31 @@ class Team extends Controller
         }
     }
 
-    //根据球队管理管id获取所属球队列表
+
+    /**
+     * 根据球队管理管id获取所属球队列表
+     *  2019/4/14 16:34
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getTeamList()
     {
-        return 'getTeamList';
+        $rule     = [
+            'user_id|用户id' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 2]);
+        }
+        $user_id   = input('user_id');
+        $team_list = TeamModel::where('create_people_id', $user_id)
+            ->field('team_name,description,create_time as create_date')
+            ->select();
+
+        return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
     }
 
     //更新球队信息
