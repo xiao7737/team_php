@@ -37,6 +37,16 @@ class Team extends Controller
      */
     public function addTeam()
     {
+        $rule     = [
+            'team_name|球队名'          => 'require',
+            'description|球队描述'       => 'require',
+            'create_people_id|创建人id' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
         $team_name        = Request::param('team_name');
         $description      = Request::param('description');
         $create_people_id = Request::param('create_people_id');
@@ -47,7 +57,7 @@ class Team extends Controller
         }
         $findPeople = AdminModel::where('id', $create_people_id)->find();
         if (!$findPeople) {
-            return json(['msg' => '当前用户没有创建球队的权限', 'status' => 3]);
+            return json(['msg' => '当前用户没有创建球队的权限', 'status' => 5]);
         }
 
         Db::startTrans();
@@ -97,7 +107,7 @@ class Team extends Controller
         }
         $user_id   = input('user_id');
         $team_list = TeamModel::where('create_people_id', $user_id)
-            ->field('team_name,description,create_time as create_date')
+            ->field('id, team_name, description, create_time as create_date')
             ->select();
 
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
@@ -109,9 +119,37 @@ class Team extends Controller
         return 'updateTeam';
     }
 
-    //解散球队，admin表中的is_admin进行处理，将is_admin-1操作
+
+    /**
+     *  解散球队，admin表中的is_admin进行处理，将is_admin-1操作
+     *    2019/4/14 17:02
+     * @return \think\response\Json
+     */
     public function deleteTeam()
     {
-        return 'deleteTeam';
+        $rule     = [
+            'user_id|用户id' => 'require|integer',
+            'team_id|球队id' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $user_id = input('user_id');
+        $team_id = input('team_id');
+        Db::startTrans();
+        try {
+            TeamModel::where('create_people_id', $user_id)
+                ->where('id', $team_id)
+                ->delete();
+            AdminModel::where('id', $user_id)
+                ->setDec('is_admin');
+            Db::commit();
+            return json(['msg' => '删除球队成功', 'status' => 1]);
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['msg' => '删除球队失败，稍后重试', 'status' => 2]);
+        }
     }
 }

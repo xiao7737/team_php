@@ -17,11 +17,11 @@ namespace app\admin\controller;
 
 use think\Controller;
 use app\admin\model\Admin as AdminModel;
-use think\Db;
 use think\facade\Request;
+use think\facade\Validate;
 
 /**
- * todo 球队管理员操作：注册，登录，球队管理，球员管理
+ *  球队管理员操作：注册，登录，球队管理，球员管理
  * Class Admin
  * @package app\admin\controller
  */
@@ -39,14 +39,26 @@ class Admin extends Controller
         //return request()->param('name');      //也可以直接调用request()函数
         //return Request::param('name');          //也可以使用静态调用的方式，但是注意use的是facade
         //return Request::url(true);
+
+        $rule     = [
+            'account|用户账号'     => 'require|integer',
+            'pw|密码'            => 'require',
+            'question|密保问题'    => 'require',
+            'question_pw|密保答案' => 'require',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
         $account     = Request::param('account');
         $pw          = Request::param('pw');
-        $question    = Request::param('question', '');
-        $question_pw = Request::param('question_pw', '');
+        $question    = Request::param('question');
+        $question_pw = Request::param('question_pw');
 
         $data = AdminModel::where('account', $account)->find();
         if ($data) {
-            return json(['msg' => '该账号已经注册,请直接登录', 'status' => 3]);
+            return json(['msg' => '该账号已经注册,请直接登录', 'status' => 4]);
         }
         //插入数据库
         $adminID = Db('admin')
@@ -71,6 +83,15 @@ class Admin extends Controller
      */
     public function login()        //也可以使用在方法中使用依赖注入
     {
+        $rule     = [
+            'account|用户账号' => 'require',
+            'pw|密码'        => 'require',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
         $account = Request::param('account');
         $pw      = Request::param('pw');
         $res     = AdminModel::where('account', $account)
@@ -100,13 +121,22 @@ class Admin extends Controller
      */
     public function updatePw()
     {
+        $rule     = [
+            'account|用户账号' => 'require',
+            'old_pw|旧密码'   => 'require',
+            'new_pw|新密码'   => 'require|between:6,14',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
         $account = Request::param('account');
         $old_pw  = Request::param('old_pw');
         $new_pw  = Request::param('new_pw');
         if ($old_pw == $new_pw) {
             return json(['msg' => '新密码和旧密码一致', 'status' => 4]);
         }
-
         $res = AdminModel::where('account', $account)
             ->where('pw', md5($old_pw))
             ->field('id')
@@ -118,9 +148,82 @@ class Admin extends Controller
             if ($updateRes) {
                 return json(['msg' => '重置密码成功', 'status' => 1]);
             } else {
-                return json(['msg' => 'server error', 'status' => 2]);
+                return json(['msg' => '重置密码失败，稍后重试', 'status' => 2]);
             }
         }
-        return json(['msg' => '密码或账号错误', 'status' => 3]);
+        return json(['msg' => '密码或账号错误', 'status' => 5]);
+    }
+
+    /**
+     *  忘记密码，通过密保和密保密码重置密码
+     *  2019/4/14 17:31
+     * @return \think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function forgetPw()
+    {
+        $rule     = [
+            'account|用户账号'     => 'require|integer',
+            'question_pw|密保答案' => 'require',
+            'new_pw|新设置的密码'    => 'require|between:6,14'
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $account     = input('account');
+        $question_pw = input('question_pw');
+        $pw          = md5(input('pw'));
+
+        $checkQuestionPW = AdminModel::where('account', $account)
+            ->where('question_pw', $question_pw)
+            ->find();
+
+        if (!$checkQuestionPW) {
+            return json(['msg' => '密保答案不正确，请重新输入', 'status' => 2]);
+        } else {
+            $updatePw = AdminModel::where('account', $account)
+                ->update(['pw' => $pw]);
+            if ($updatePw) {
+                return json(['msg' => '重置密码成功', 'status' => 1]);
+            } else {
+                return json(['msg' => '重置密码失败', 'status' => 4]);
+            }
+        }
+    }
+
+
+    /**
+     *  获取密保问题
+     *    2019/4/14 17:41
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getQuestion()
+    {
+        $rule     = [
+            'account|用户账号' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $account  = input('account');
+        $question = AdminModel::where('account', $account)
+            ->field('question')
+            ->find();
+        if ($question) {
+            return json(['msg' => '获取密保问题成功', 'status' => 1, 'data' => $question]);
+        } else {
+            return json(['msg' => '获取密保问题失败', 'status' => 2, 'data' => $question]);
+        }
     }
 }

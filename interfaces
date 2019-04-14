@@ -6,22 +6,75 @@ baseUrl:http://39.108.222.100/team_php/public/index.php
     参数：account    账号（一般为手机号码）
          pw         密码
     返回：msg        详细信息
-         status     状态码（1：注册成功，2：注册失败，3：该账号已经注册,请直接登录）
+         status     状态码（1：登录成功，2：密码或账号错误，3：参数验证失败）
+         data（array）  {user_id:用户id，is_admin:-1非球员管理员，0普通球员，1管理员（实际情况可以大于1，拥有多个球队的情况）}
 
 2.用户注册
-3.用户更新密码
+    地址: /admin_register
+    方式：post
+    参数：account      账号
+         pw           密码
+         question     密保问题
+         question_pw  密保的答案
+    返回：msg        详细信息
+         status     状态码（1：注册成功，2：注册失败，3：参数验证失败，4该账号已经被注册，请直接登录）
+
+3.用户更新密码（知道密码的情况下）
+    地址: admin_update_pw
+    方式：post
+    参数：account      账号
+         old_pw       旧密码
+         new_pw       新密码
+    返回：msg        详细信息
+         status     状态码（1：重置密码成功，2：失败，3：参数验证失败，4新密码和旧密码一致，5该账号不存在）
+
+3.1 获取密保问题（用于忘记密码时）
+    地址: admin_get_question
+        方式：get
+        参数：无
+        返回：msg        详细信息
+             status     状态码（1：获取密保问题成功，2：失败，3：参数验证失败）
+             data       question
+
+3.2 重置密码（通过密保问题修改密码，忘记密码的情况下）
+    地址: admin_forget_pw
+        方式：post
+        参数：account      账号
+             question_pw  密保问题
+             new_pw       新密码
+        返回：msg        详细信息
+             status     状态码（1：重置密码成功，2：密保答案不正确，请重新输入，3：参数验证失败，4：重置密码失败）
+
 4.添加用户信息（未添加）
 5.更新用户信息（未添加）
+
 6.创建球队
     地址: /team/add_team
-        参数：team_name           球队名称
-             description         球队简介
-             create_people_id    创建人id
-        返回：msg        详细信息
-             status     状态码（1：创建球队成功，2：创建球队失败，3：当前用户没有球队的权限，4：该球队名已经被注册）
+    方式：post
+    参数：team_name           球队名称
+         description         球队简介
+         create_people_id    创建人id
+    返回：msg        详细信息
+         status     状态码（1：创建球队成功，2：创建球队失败，3：参数验证失败，5：当前用户没有球队的权限，4：该球队名已经被注册）
+
 7.删除球队
+    地址: /team/delete_team
+        方式：post
+        参数：team_id         球队id
+             user_id         创建者id
+        返回：msg        详细信息
+             status     状态码（1：删除球队成功，2：删除球队失败，稍后重试，3：参数验证失败）
+
 8.查看球队
-9.修改球队
+    地址: /team/get_team_list
+        方式：post
+        参数：user_id        球队创建人id
+        返回：msg            详细信息
+             status         状态码（1：获取成功，2：参数验证失败）
+             data（array）   {"team_name": "物联网1",
+                             "description": "测试添加数据",
+                             "create_date": "2019-04-14 16:06:49"}
+9.修改球队（待完成）
 
 
 球员参加球队后，更新admin表的is_admin为0
