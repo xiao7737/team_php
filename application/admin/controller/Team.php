@@ -46,22 +46,31 @@ class Team extends Controller
         }
         $findPeople = AdminModel::where('id', $create_people_id)->find();
         if (!$findPeople) {
-            return json(['msg' => '当前用户没有球队的权限', 'status' => 3]);
+            return json(['msg' => '当前用户没有创建球队的权限', 'status' => 3]);
         }
 
-        //创建球队成功后，更新admin表，将该用户的is_admin+1
-        $res = Db::transaction(function () use ($team_name, $description, $create_people_id) {
-            Db::table('team_team')->insert([
+        Db::startTrans();
+        try {
+            $team = new TeamModel();
+            $team->save([
                 'team_name'        => $team_name,
                 'description'      => $description,
                 'create_people_id' => $create_people_id,
-                'create_time'      => date('Y-m-d', time())
             ]);
-            Db::table('team_admin')->where('id', $create_people_id)->setInc('is_admin');
-        });
-        if ($res) {
+            //判断原始状态是否>=0,如果为-1，直接变为1
+            if ($findPeople['is_admin'] >= 0) {
+                Db::table('team_admin')
+                    ->where('id', $create_people_id)
+                    ->setInc('is_admin');
+            } else {      //初始态为-1
+                Db::table('team_admin')
+                    ->where('id', $create_people_id)
+                    ->update(['is_admin' => Db::raw('is_admin+2')]);
+            }
+            Db::commit();
             return json(['msg' => '创建球队成功', 'status' => 1]);
-        } else {
+        } catch (\Exception $e) {
+            Db::rollback();
             return json(['msg' => '创建球队失败', 'status' => 2]);
         }
     }

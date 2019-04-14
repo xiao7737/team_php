@@ -24,4 +24,5 @@ use think\Model;
 class Team extends Model
 {
     protected $table = 'team_team';
+    protected $autoWriteTimestamp = 'datetime';
 }
