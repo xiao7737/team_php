@@ -29,7 +29,18 @@ use think\facade\Validate;
 class Team extends Controller
 {
     /**
-     *
+     * @api {post} /team/add_team  新建球队
+     * @apiGroup  team
+     * @apiParam {String}   team_name     球队名.
+     * @apiParam {String}   description  球队简介.
+     * @apiParam {Number}   create_people_id  创建人id.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码：1：创建球队成功，2：创建球队失败，3：参数验证失败，5：当前用户没有球队的权限，4：该球队名已经被注册
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "创建球队成功",
+     * "status": 1
+     * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
