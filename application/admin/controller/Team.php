@@ -99,8 +99,30 @@ class Team extends Controller
 
 
     /**
-     * 根据球队管理管id获取所属球队列表
-     *  2019/4/14 16:34
+     * @api {post} /team/get_team_list  获取球队列表
+     * @apiGroup  team
+     * @apiParam {Number}   user_id     创建人id.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "获取成功",
+     * "status": 1,
+     * "data": [
+     * {
+     * "id": 7,
+     * "team_name": "物联网1",
+     * "description": "测试添加数据",
+     * "create_date": "2019-04-14 16:06:49"
+     * },
+     * {
+     * "id": 8,
+     * "team_name": "物联网2",
+     * "description": "测试添加数据2",
+     * "create_date": "2019-04-14 16:09:21"
+     * }
+     * ]
+     * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -124,7 +146,7 @@ class Team extends Controller
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
     }
 
-    //更新球队信息
+    //todo 更新球队信息
     public function updateTeam()
     {
         return 'updateTeam';
@@ -132,8 +154,17 @@ class Team extends Controller
 
 
     /**
-     *  解散球队，admin表中的is_admin进行处理，将is_admin-1操作
-     *    2019/4/14 17:02
+     * @api {post} /team/delete_team  删除球队
+     * @apiGroup  team
+     * @apiParam {Number}   user_id  创建人id.
+     * @apiParam {Number}   team_id  球队id.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：删除球队成功，2：删除球队失败，稍后重试，3：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "删除球队成功",
+     * "status": 1
+     * }
      * @return \think\response\Json
      */
     public function deleteTeam()

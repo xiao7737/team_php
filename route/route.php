@@ -19,7 +19,7 @@ Route::post('admin_register', 'admin/admin/register');
 Route::post('admin_login', 'admin/admin/login');//->allowCrossDomain();  //设置跨域访问
 Route::post('admin_update_pw', 'admin/admin/updatePw');         //管理员修改密码
 Route::get('admin_get_question', 'admin/admin/getQuestion');    //获取密保问题
-Route::post('admin_forget_pw', 'admin/admin/forgetPw');         //通过密保重置密码
+Route::post('admin_forget_pw', 'admin/admin/forgetPwByAnswer');         //通过密保重置密码
 
 
 Route::group('team', function () {

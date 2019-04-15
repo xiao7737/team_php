@@ -28,6 +28,14 @@ use think\facade\Validate;
 class Admin extends Controller
 {
     /**
+     * @api {post} /admin_register  用户注册
+     * @apiGroup  admin
+     * @apiParam {Number}   account     账号（手机号）.
+     * @apiParam {String}   pw  密码.
+     * @apiParam {String}   question  密保问题.
+     * @apiParam {String}   question_pw  密保答案.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：注册成功，2：注册失败，3：参数验证失败，4该账号已经被注册，请直接登录）
      * @return array|\PDOStatement|string|\think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -76,6 +84,22 @@ class Admin extends Controller
     }
 
     /**
+     * @api {post} /admin_login  用户登录
+     * @apiGroup  admin
+     * @apiParam {Number}   account     账号（手机号）.
+     * @apiParam {String}   pw  密码.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：登录成功，2：密码或账号错误，3：参数验证失败）
+     * * @apiSuccess {Number} is_admin （身份标识：-1普通注册，0球员，1及以上，代表创建的球队个数）.
+     * @apiSuccessExample {json} Success-Response:
+     *{
+     * "msg": "登录成功",
+     * "status": 1,
+     * "data": {
+     * "user_id": 4,
+     * "is_admin": 2
+     * }
+     * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -112,6 +136,13 @@ class Admin extends Controller
 
 
     /**
+     * @api {post} /admin_update_pw  用户更新密码
+     * @apiGroup  admin
+     * @apiParam {Number}   account     账号（手机号）.
+     * @apiParam {String}   old_pw  旧密码.
+     * @apiParam {String}   new_pw  新密码.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：重置密码成功，2：失败，3：参数验证失败，4新密码和旧密码一致，5该账号不存在）
      * @return \think\response\Json
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -155,8 +186,13 @@ class Admin extends Controller
     }
 
     /**
-     *  忘记密码，通过密保和密保密码重置密码
-     *  2019/4/14 17:31
+     * @api {post} /admin_forget_pw   通过密保修改密码
+     * @apiGroup  admin
+     * @apiParam {Number}   account     账号.
+     * @apiParam {String}   question_pw  密保答案.
+     * @apiParam {String}   new_pw  新密码.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：重置密码成功，2：密保答案不正确，请重新输入，3：参数验证失败，4：重置密码失败）
      * @return \think\response\Json
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -164,7 +200,7 @@ class Admin extends Controller
      * @throws \think\exception\DbException
      * @throws \think\exception\PDOException
      */
-    public function forgetPw()
+    public function forgetPwByAnswer()
     {
         $rule     = [
             'account|用户账号'     => 'require|integer',
@@ -199,8 +235,19 @@ class Admin extends Controller
 
 
     /**
-     *  获取密保问题
-     *    2019/4/14 17:41
+     * @api {get} /admin_get_question   获取密保问题
+     * @apiGroup  admin
+     * @apiParam {Number}   account     账号.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：获取密保问题成功，2：失败，3：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "获取密保问题成功",
+     * "status": 1,
+     * "data": {
+     * "question": "你的名字？"
+     * }
+     * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
