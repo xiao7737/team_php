@@ -90,7 +90,7 @@ class Admin extends Controller
      * @apiParam {String}   pw  密码.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：登录成功，2：密码或账号错误，3：参数验证失败）
-     * * @apiSuccess {Number} is_admin （身份标识：-1普通注册，0球员，1及以上，代表创建的球队个数）.
+     * @apiSuccess {Number} is_admin （身份标识：-1普通注册，0球员，1及以上，代表创建的球队个数）.
      * @apiSuccessExample {json} Success-Response:
      *{
      * "msg": "登录成功",
