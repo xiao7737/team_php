@@ -17,6 +17,7 @@ namespace app\admin\controller;
 
 use think\Controller;
 use app\admin\model\Admin as AdminModel;
+use think\facade\Cache;
 use think\facade\Request;
 use think\facade\Validate;
 
@@ -123,11 +124,15 @@ class Admin extends Controller
             ->field('id, is_admin')
             ->find();
 
-        $data = [
-            'user_id'  => $res['id'],
-            'is_admin' => $res['is_admin']     //1 管理员，0 普通球员,-1 新注册用户，即非球员非管理员
-        ];
         if ($res) {
+            $data = [
+                'user_id'  => $res['id'],
+                'is_admin' => $res['is_admin'],     //1 管理员，0 普通球员,-1 新注册用户，即非球员非管理员
+                'token'    => $res['id'] . '@' . time()    //生成token  用户id@时间戳
+            ];
+
+            $key = 'auth_' . $res['id'];
+            Cache::set($key, $data['token']);
             return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);
         }
 

@@ -15,11 +15,11 @@
 
 return [
     // 驱动方式
-    'type'   => 'File',
+    'type'   => 'redis',
     // 缓存保存目录
-    'path'   => '',
+    'path'   => 'CACHE_PATH',
     // 缓存前缀
     'prefix' => '',
     // 缓存有效期 0表示永久缓存
-    'expire' => 0,
+    'expire' => 3600,
 ];
