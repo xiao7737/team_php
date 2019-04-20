@@ -155,7 +155,7 @@ class Admin extends Controller
         $rule     = [
             'account|用户账号' => 'require',
             'old_pw|旧密码'   => 'require',
-            'new_pw|新密码'   => 'require|between:6,14',
+            'new_pw|新密码'   => 'require||min:6|max:14',
         ];
         $validate = Validate::make($rule);
         $result   = $validate->check(input('param.'));
