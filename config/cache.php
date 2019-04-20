@@ -15,7 +15,7 @@
 
 return [
     // 驱动方式
-    'type'   => 'redis',
+    'type'   => 'Redis',
     // 缓存保存目录
     'path'   => 'CACHE_PATH',
     // 缓存前缀
