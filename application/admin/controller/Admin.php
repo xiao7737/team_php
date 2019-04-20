@@ -203,9 +203,9 @@ class Admin extends Controller
     public function forgetPwByAnswer()
     {
         $rule     = [
-            'account|用户账号'     => 'require|integer',
+            'account|用户账号'     => 'require',
             'question_pw|密保答案' => 'require',
-            'new_pw|新设置的密码'    => 'require|between:6,14'
+            'new_pw|新设置的密码'    => 'require|min:6|max:14'
         ];
         $validate = Validate::make($rule);
         $result   = $validate->check(input('param.'));
@@ -270,7 +270,7 @@ class Admin extends Controller
         if ($question) {
             return json(['msg' => '获取密保问题成功', 'status' => 1, 'data' => $question]);
         } else {
-            return json(['msg' => '获取密保问题失败', 'status' => 2, 'data' => $question]);
+            return json(['msg' => '用户不存在', 'status' => 2, 'data' => $question]);
         }
     }
 }

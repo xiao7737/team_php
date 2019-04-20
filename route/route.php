@@ -27,7 +27,7 @@ Route::group('team', function () {
     Route::post('delete_team', 'admin/team/deleteTeam');    //删除球队
     Route::post('update_team', 'admin/team/updateTeam');    //更新球队
     Route::post('get_team_list', 'admin/team/getTeamList'); //获取球队列表
-});
+})->middleware('app\http\middleware\Auth::class');
 
 
 return [
