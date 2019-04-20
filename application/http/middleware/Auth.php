@@ -2,6 +2,7 @@
 
 namespace app\http\middleware;
 
+use think\cache\driver\Redis;
 use think\facade\Cache;
 use think\facade\Request;
 use think\Response;
@@ -20,8 +21,9 @@ class Auth
         $token_key  = $token_true[0];          //用户id
 
         if ($token) {
-            $key = 'auth_' . $token_key;
-            if (Cache::get($key) !== $token) {
+            $redis = new  Redis();
+            $key   = 'auth_' . $token_key;
+            if ($redis->get($key) !== $token) {
                 return response('Unauthorized.', 401);
             }
             return $next($request);
