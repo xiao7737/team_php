@@ -27,6 +27,6 @@ class Auth
             }
             return $next($request);
         }
-        return $next($request);
+        return response('Unauthorized.', 401);
     }
 }
