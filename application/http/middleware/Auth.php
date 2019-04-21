@@ -19,13 +19,14 @@ class Auth
         $token_true = explode('@', $token);
         $token_key  = $token_true[0];          //用户id
 
-        if ($token) {
+        if (isset($token)) {
             $redis = new  Redis();
             $key   = 'auth_' . $token_key;
             if ($redis->get($key) !== $token) {
                 return response('Unauthorized.', 401);
+            } else {
+                return $next($request);
             }
-            return $next($request);
         } else {
             return response('Unauthorized, Authorization is empty', 401);
         }
