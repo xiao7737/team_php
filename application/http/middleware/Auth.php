@@ -3,7 +3,6 @@
 namespace app\http\middleware;
 
 use think\cache\driver\Redis;
-use think\facade\Cache;
 use think\facade\Request;
 use think\Response;
 
@@ -28,6 +27,6 @@ class Auth
             }
             return $next($request);
         }
-        return response('Unauthorized.', 401);
+        return true;
     }
 }

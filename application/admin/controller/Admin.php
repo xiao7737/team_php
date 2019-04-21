@@ -18,7 +18,6 @@ namespace app\admin\controller;
 use think\cache\driver\Redis;
 use think\Controller;
 use app\admin\model\Admin as AdminModel;
-use think\facade\Cache;
 use think\facade\Request;
 use think\facade\Validate;
 
@@ -135,7 +134,6 @@ class Admin extends Controller
             $key = 'auth_' . $res['id'];
             $redis = new Redis();
             $redis->set($key, $data['token']);
-            //Cache::set($key, $data['token']);
             return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);
         }
 
