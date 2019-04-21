@@ -27,6 +27,7 @@ class Auth
             }
             return $next($request);
         }
-        return $next($request);
+        return response('Authorization is empty', 401);
+        //return $next($request);
     }
 }
