@@ -27,6 +27,6 @@ class Auth
             }
             return $next($request);
         }
-        return true;
+        return $next($request);
     }
 }
