@@ -26,7 +26,8 @@ class Auth
                 return response('Unauthorized.', 401);
             }
             return $next($request);
+        } else {
+            return response('Unauthorized, Authorization is empty', 401);
         }
-        return response('Unauthorized..', 401);
     }
 }
