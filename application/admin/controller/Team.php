@@ -194,4 +194,9 @@ class Team extends Controller
             return json(['msg' => '删除球队失败，稍后重试', 'status' => 2]);
         }
     }
+
+
+    public function getTeamById(){
+
+    }
 }
