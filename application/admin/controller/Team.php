@@ -238,4 +238,53 @@ class Team extends Controller
 
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
     }
+
+    /**
+     * @api {post} /team/get_team_list_by_fuzzy  删除球队
+     * @apiGroup  team
+     * @apiParam {}   team_name  球队名.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "获取成功",
+     * "status": 1,
+     * "data": [
+     * {
+     * "id": 7,
+     * "team_name": "物联网1",
+     * "description": "测试添加数据",
+     * "create_date": "2019-04-14 16:06:49"
+     * },
+     * {
+     * "id": 8,
+     * "team_name": "物联网2",
+     * "description": "测试添加数据2",
+     * "create_date": "2019-04-14 16:09:21"
+     * }
+     * ]
+     * }
+     *
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getTeamListByFuzzy()
+    {
+        $rule     = [
+            'team_name|球队名' => 'require',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 2]);
+        }
+        $team_name = input('team_name');
+        $team_list = TeamModel::where('team_name', 'like', '%' . $team_name . '%')
+            ->field('id, team_name, description, create_time as create_date')
+            ->select();
+
+        return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
+    }
 }

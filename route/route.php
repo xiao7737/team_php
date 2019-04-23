@@ -12,4 +12,5 @@ Route::group('team', function () {
     Route::post('update_team', 'admin/team/updateTeam');    //更新球队
     Route::post('get_team_list', 'admin/team/getTeamList'); //获取球队列表
     Route::post('get_team_by_id', 'admin/team/getTeamById'); //获取球队信息
+    Route::post('get_team_list_by_fuzzy', 'admin/team/getTeamListByFuzzy');   //根据球队名模糊查询
 })->middleware('app\http\middleware\Auth::class');
