@@ -240,9 +240,9 @@ class Team extends Controller
     }
 
     /**
-     * @api {post} /team/get_team_list_by_fuzzy  删除球队
+     * @api {post} /team/get_team_list_by_fuzzy  根据球队名模糊查询
      * @apiGroup  team
-     * @apiParam {}   team_name  球队名.
+     * @apiParam  {String} team_name  球队名.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
      * @apiSuccessExample {json} Success-Response:
