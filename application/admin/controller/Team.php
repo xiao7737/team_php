@@ -195,8 +195,47 @@ class Team extends Controller
         }
     }
 
+    /**
+     * @api {post} /team/get_team_by_id  根据id获取球队信息
+     * @apiGroup  team
+     * @apiParam {Number}   user_id     创建人id.
+     * @apiParam {Number}   id     球队id.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "获取成功",
+     * "status": 1,
+     * "data": {
+     * "id": 7,
+     * "team_name": "物联网1",
+     * "description": "测试添加数据",
+     * "create_date": "2019-04-14 16:06:49"
+     * }
+     * }
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getTeamById()
+    {
+        $rule     = [
+            'user_id|用户id' => 'require|integer',
+            'id|球队id'      => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 2]);
+        }
+        $id        = input('id');
+        $user_id   = input('user_id');
+        $team_list = TeamModel::where('create_people_id', $user_id)
+            ->where('id', $id)
+            ->field('id, team_name, description, create_time as create_date')
+            ->find();
 
-    public function getTeamById(){
-
+        return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
     }
 }
