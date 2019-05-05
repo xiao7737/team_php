@@ -1,6 +1,5 @@
 <?php
 /**
- * User: xiaoxichuan
  * Date: 2019/4/3
  * Time: 10:50
  * 　　   ┏┓　 ┏┓

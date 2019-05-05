@@ -1,7 +1,7 @@
 <?php
 /**
- * Date: 2019/4/13
- * Time: 14:55
+ * Date: 2019/5/5
+ * Time: 18:42
  * 　　   ┏┓　 ┏┓
  * 　┏━━━━┛┻━━━┛┻━━━┓
  * 　┃              ┃
@@ -20,8 +20,8 @@ use think\Model;
  * Class Team 球队管理
  * @package app\admin\model
  */
-class Team extends Model
+class Notice extends Model
 {
-    protected $table = 'team_team';
+    protected $table = 'team_notice';
     protected $autoWriteTimestamp = 'datetime';
 }
