@@ -19,7 +19,7 @@ class User extends Controller
      * @apiParam {Number}   id   用户id.
      * @apiParam {String}   name  名字.
      * @apiParam {String}   sex   性别.
-     * @apiParam {String}   age  性别.
+     * @apiParam {String}   age  年龄.
      * @apiParam {String}   email  邮箱.
      * @apiParam {Number}   tel  联系方式.
      * @apiSuccess {String} msg 详细信息.

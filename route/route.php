@@ -10,7 +10,7 @@ Route::post('admin_forget_pw', 'admin/admin/forgetPwByAnswer');          //通�
 Route::group('user', function () {
     Route::get('get_user_info', 'admin/User/getUserInfo');             //获取用户信息
     Route::post('update_user_info', 'admin/User/updateUserInfo');      //编辑/添加用户信息
-});
+})->middleware('app\http\middleware\Auth::class');
 
 //球队管理
 Route::group('team', function () {
