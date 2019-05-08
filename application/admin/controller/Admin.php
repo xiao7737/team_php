@@ -24,6 +24,7 @@ class Admin extends Controller
      * @apiParam {String}   question_pw  密保答案.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：注册成功，2：注册失败，3：参数验证失败，4该账号已经被注册，请直接登录）
+     * @apiSuccess {Number} user_id 用户注册成功的id
      * @return array|\PDOStatement|string|\think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -58,14 +59,14 @@ class Admin extends Controller
         }
         //插入数据库
         $adminID = Db('admin')
-            ->insert([
+            ->insertGetId([
                 'account'     => $account,
                 'pw'          => md5($pw),
                 'question'    => $question,
                 'question_pw' => $question_pw,
             ]);
         if ($adminID) {
-            return json(['msg' => '注册成功', 'status' => 1]);
+            return json(['msg' => '注册成功', 'status' => 1, 'user_id' => $adminID]);
         } else {
             return json(['msg' => '注册失败', 'status' => 2]);
         }
@@ -118,7 +119,7 @@ class Admin extends Controller
                 'token'    => $res['id'] . '@' . time()    //生成token  用户id@时间戳
             ];
 
-            $key = 'auth_' . $res['id'];
+            $key   = 'auth_' . $res['id'];
             $redis = new Redis();
             $redis->set($key, $data['token']);
             return json(['msg' => '登录成功', 'status' => 1, 'data' => $data]);

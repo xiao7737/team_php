@@ -53,7 +53,9 @@ class Team extends Controller
         if ($data) {
             return json(['msg' => '该球队名已经被注册，请换一个球队名吧！', 'status' => 4]);
         }
-        $findPeople = AdminModel::where('id', $create_people_id)->find();
+
+        //球员不能创建球队
+        $findPeople = AdminModel::where('id', $create_people_id)->where('is_admin', '<>', 0)->find();
         if (!$findPeople) {
             return json(['msg' => '当前用户没有创建球队的权限', 'status' => 5]);
         }
@@ -218,12 +220,12 @@ class Team extends Controller
         }
         $id        = input('id');
         $user_id   = input('user_id');
-        $team_list = TeamModel::where('create_people_id', $user_id)
+        $team_data = TeamModel::where('create_people_id', $user_id)
             ->where('id', $id)
             ->field('id, team_name, description, create_time as create_date')
             ->find();
 
-        return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
+        return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_data]);
     }
 
     /**

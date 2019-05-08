@@ -6,6 +6,12 @@ Route::post('admin_update_pw', 'admin/admin/updatePw');                  //管�
 Route::get('admin_get_question', 'admin/admin/getQuestion');             //获取密保问题
 Route::post('admin_forget_pw', 'admin/admin/forgetPwByAnswer');          //通过密保重置密码
 
+//用户管理
+Route::group('user', function () {
+    Route::get('get_user_info', 'admin/User/getUserInfo');             //获取用户信息
+    Route::post('update_user_info', 'admin/User/updateUserInfo');      //编辑/添加用户信息
+});
+
 //球队管理
 Route::group('team', function () {
     Route::post('add_team', 'admin/team/addTeam');           //创建球队

@@ -18,7 +18,7 @@ class Honor extends Controller
      * @apiParam {Number}   team_id    球队编号
      * @apiParam {String}   match_name  比赛名称.
      * @apiParam {String}   prize_level  获得的名次或者称号.
-     * @apiParam {Number}   honor_time   获得荣耀的时间戳.
+     * @apiParam {Number}   honor_time   获得荣耀的时间.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码：1：添加荣耀成功，2：删除荣耀失败，3：参数验证失败
      * @apiSuccessExample {json} Success-Response:
