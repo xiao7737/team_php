@@ -1,16 +1,4 @@
 <?php
-/**
- * Date: 2019/5/5
- * Time: 18:36
- * 　　   ┏┓　 ┏┓
- * 　┏━━━━┛┻━━━┛┻━━━┓
- * 　┃              ┃
- * 　┃       ━　    ┃
- * 　┃　  ┳┛ 　┗┳   ┃
- * 　┃              ┃
- * 　┃       ┻　    ┃
- * 　┗━━━┓      ┏━━━┛
- */
 
 namespace app\admin\controller;
 
@@ -33,7 +21,7 @@ class Notice extends Controller
      * @apiParam {Number}   team_id     球队id.
      * @apiParam {Number}   user_id     创建人id.
      * @apiParam {String}   title  公告标题.
-     * @apiParam {String}   question  公告内容.
+     * @apiParam {String}   content  公告内容.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：成功，2：失败，3：参数验证失败）
      * @return \think\response\Json
@@ -71,7 +59,6 @@ class Notice extends Controller
     }
 
     /**
-     *
      * @api {post} /notice/delete_notice  删除公告
      * @apiGroup  notice
      * @apiParam {Number}   user_id     用户id.
@@ -124,6 +111,9 @@ class Notice extends Controller
      * @apiParam {Number}   team_id     球队id.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：成功，列表按照创建时间倒序返回，2：参数验证失败）
+     * @apiSuccess {String} title 公告标题.
+     * @apiSuccess {String} content 公告内容.
+     * @apiSuccess {String} create_date 公告发布时间.
      * @apiSuccessExample {json} Success-Response:
      *{
      * "msg": "获取成功",
