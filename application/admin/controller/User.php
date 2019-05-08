@@ -14,7 +14,7 @@ use think\facade\Validate;
 class User extends Controller
 {
     /**
-     * @api {post} /add_user_info  编辑/添加用户信息
+     * @api {post} /user/add_user_info  编辑/添加用户信息
      * @apiGroup  user
      * @apiParam {Number}   id   用户id.
      * @apiParam {String}   name  名字.
