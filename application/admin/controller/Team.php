@@ -338,13 +338,22 @@ class Team extends Controller
      * {
      * "msg": "获取成功",
      * "status": 1,
-     * "data": {
+     * "data": [
+     * {
      * "id": 2,
      * "user_id": "9",
-     * "member_name": "测试添加数据",
+     * "member_name": "张三",
      * "number": "22",
      * "create_time": "2019-04-14 16:06:49"
+     * },
+     * {
+     * "id": 3,
+     * "user_id": "8",
+     * "member_name": "李四",
+     * "number": "23",
+     * "create_time": "2019-04-14 16:06:49"
      * }
+     * ]
      * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
