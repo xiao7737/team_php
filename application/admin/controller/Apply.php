@@ -118,11 +118,11 @@ class Apply extends Controller
                 try {
                     //step2  更新申请表的申请状态
                     ApplyModel::where('id', $id)
-                        ->update(['status' => 1]);
+                        ->update(['status' => 2]);
 
                     //step3  更新用户表的用户标识
                     AdminModel::where('id', $member_info['user_id'])
-                        ->update(['is_admin' => 1]);
+                        ->update(['is_admin' => 0]);
 
                     //step4  将申请人信息加入到球队成员表
                     $member = new MemberModel();
