@@ -147,7 +147,7 @@ class Apply extends Controller
 
 
     /**
-     * @api {get} /apply/get_apply_list  用户查看审批详情
+     * @api {get} /apply/get_apply_list  管理员查看审批列表
      * @apiGroup  apply
      * @apiParam {Number}   team  球队编号.
      * @apiSuccess {String} msg 详细信息.
