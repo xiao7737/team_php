@@ -4,7 +4,9 @@ namespace app\admin\controller;
 
 use app\admin\model\Member;
 use think\Controller;
+use think\Db;
 use think\facade\Validate;
+use app\admin\model\Admin as AdminModel;
 use app\admin\model\Apply as ApplyModel;
 use app\admin\model\Member as MemberModel;
 
@@ -72,20 +74,19 @@ class Apply extends Controller
         }
     }
 
-    //球队管理员查看申请列表，包括已经拒绝/已经同意的列表
-    public function getApplyList()
-    {
-    }
-
-    //球队管理员同同意或者拒绝申请，同意则加入球员表
 
     /**
-     *
+     * @api {post} /apply/update_apply  审批申请
+     * @apiGroup  apply
+     * @apiParam {Number}   id  申请编号.
+     * @apiParam {Number}   action  审批操作：1同意，2拒绝.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码：1：成功，2：失败，3：参数验证失败
      * @return \think\response\Json
      * @throws \think\Exception
      * @throws \think\exception\PDOException
      */
-    public function updateApplyStatus()
+    public function updateApply()
     {
         $rule     = [
             'id|申请编号'           => 'require|integer',
@@ -99,15 +100,73 @@ class Apply extends Controller
         $id     = input('id');
         $action = input('action');
         switch ($action) {
-            case 2:   //拒绝申请
+            case 2:
                 ApplyModel::where('id', $id)->update(['status' => 3]);
+                return json(['msg' => '操作成功', 'status' => 1]);
                 break;
-            case 1:   //同意申请
+            case 1:
                 //step1  从申请表获取申请相关信息
-                $menber_id = ApplyModel::where('id',$id)
+                $member_info = ApplyModel::where('id', $id)
                     ->field('user_id, team_id, apply_number, apply_people')->find();
-                //step2  从用户表获取
+
+                Db::startTrans();
+                try {
+                    //step2  更新申请表的申请状态
+                    ApplyModel::where('id', $id)
+                        ->update(['status' => 1]);
+
+                    //step3  更新用户表的用户标识
+                    AdminModel::where('id', $member_info['user_id'])
+                        ->update(['is_admin' => 1]);
+
+                    //step4  将申请人信息加入到球队成员表
+                    $member = new MemberModel();
+                    $member->save([
+                            'user_id'     => $member_info['user_id'],
+                            'team_id'     => $member_info['team_id'],
+                            'number'      => $member_info['apply_number'],
+                            'member_name' => $member_info['apply_people'],
+                        ]
+                    );
+                    Db::commit();
+                    return json(['msg' => '操作成功', 'status' => 1]);
+                } catch (\Exception $e) {
+                    Db::rollback();
+                    return json(['msg' => '操作失败，稍后重试', 'status' => 2]);
+                }
+                break;
+            default:
+                return json(['msg' => '错误的请求，操作失败', 'status' => 2]);
         }
-        //开启事务
+    }
+
+
+    /**
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getApplyList()
+    {
+        $rule     = [
+            'team_id|球队编号' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $team_id = input('team_id');
+
+        //todo 对三种状态的申请分组
+        $applyInfo = ApplyModel::where('team_id', $team_id)->select();
+        return json(['msg' => "获取成功", 'status' => 1, 'data' => $applyInfo]);
+    }
+
+
+    //todo 申请人查看申请结果，返回申请表信息
+    public function getOneApply()
+    {
     }
 }

@@ -43,5 +43,6 @@ Route::group('honor', function () {
 Route::group('apply', function () {
     Route::post('add_apply', 'admin/apply/applyJoinTeam');     //提交申请
     Route::post('update_apply', 'admin/apply/updateApply');    //审批申请
+    Route::get('get_apply', 'admin/apply/getOneApply');        //获取申请结果
     Route::get('get_apply_list', 'admin/apply/getApplyList');  //获取申请列表
 })->middleware('app\http\middleware\Auth::class');
