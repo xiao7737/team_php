@@ -47,3 +47,10 @@ Route::group('apply', function () {
     Route::get('get_apply', 'admin/apply/getOneApply');        //获取申请结果
     Route::get('get_apply_list', 'admin/apply/getApplyList');  //获取申请列表
 })->middleware('app\http\middleware\Auth::class');
+
+//比赛管理
+Route::group('match', function () {
+    Route::post('add_match', 'admin/match/addMatch');          //添加比赛
+    Route::post('delete_match', 'admin/match/deleteMatch');    //删除比赛
+    Route::get('get_match_list', 'admin/match/getMatchList');  //获取比赛列表
+})->middleware('app\http\middleware\Auth::class');
