@@ -334,6 +334,10 @@ class Team extends Controller
      * @apiParam  {Number} team_id  球队编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccess {Number} user_id  球员编号
+     * @apiSuccess {String} member_name 球员名字
+     * @apiSuccess {Number} number 球衣号码
+     * @apiSuccess {String} create_time 加入球队时间
      * @apiSuccessExample {json} Success-Response:
      * {
      * "msg": "获取成功",
