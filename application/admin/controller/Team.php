@@ -334,7 +334,6 @@ class Team extends Controller
      * @apiParam  {Number} team_id  球队编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
-     * @apiSuccessExample {json} Success-Response:
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
