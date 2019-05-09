@@ -149,7 +149,7 @@ class Apply extends Controller
     /**
      * @api {get} /apply/get_apply_list  管理员查看审批列表
      * @apiGroup  apply
-     * @apiParam {Number}   team  球队编号.
+     * @apiParam {Number}   team_id  球队编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码：1：成功，3：参数验证失败
      * @apiSuccess {String} apply_people 申请人
