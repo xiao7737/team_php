@@ -38,3 +38,10 @@ Route::group('honor', function () {
     Route::post('update_honor', 'admin/honor/updateHonor');    //更新荣耀
     Route::get('get_honor_list', 'admin/honor/getHonorList');  //获取荣耀列表
 })->middleware('app\http\middleware\Auth::class');
+
+//申请管理
+Route::group('apply', function () {
+    Route::post('add_apply', 'admin/apply/applyJoinTeam');     //提交申请
+    Route::post('update_apply', 'admin/apply/updateApply');    //审批申请
+    Route::get('get_apply_list', 'admin/apply/getApplyList');  //获取申请列表
+})->middleware('app\http\middleware\Auth::class');

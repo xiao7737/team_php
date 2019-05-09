@@ -14,7 +14,7 @@ use think\facade\Validate;
 class User extends Controller
 {
     /**
-     * @api {post} /user/add_user_info  编辑/添加用户信息
+     * @api {post} /user/update_user_info  编辑/添加用户信息
      * @apiGroup  user
      * @apiParam {Number}   id   用户id.
      * @apiParam {String}   name  名字.
@@ -105,7 +105,7 @@ class User extends Controller
             return json(['msg' => $validate->getError(), 'status' => 3]);
         }
         $id   = input('id');
-        $data = AdminModel::where('id', $id)->field('id, name, age,sex, email, tel')->find();
+        $data = AdminModel::where('id', $id)->field('id, name, age, sex, email, tel')->find();
 
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $data]);
     }

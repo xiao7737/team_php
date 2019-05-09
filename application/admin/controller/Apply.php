@@ -80,5 +80,17 @@ class Apply extends Controller
     //球队管理员同同意或者拒绝申请，同意则加入球员表
     public function updateApplyStatus()
     {
+        $rule     = [
+            'id|申请编号'           => 'require|integer',
+            'action|同意或者拒绝的状态码' => 'require|integer',         //1同意，2拒绝
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $id = input('id');
+        $action = input('action');
+        //开启事务
     }
 }
