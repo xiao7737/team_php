@@ -63,7 +63,7 @@ class Apply extends Controller
             return json(['msg' => '该用户没有申请加入球队的权限', 'status' => 5]);
         }
         //正在申请中状态下不允许申请
-        $status = ApplyModel::where('user_id', $user_id)->where('staus', 1)->find();
+        $status = ApplyModel::where('user_id', $user_id)->where('status', 1)->find();
         if ($status) {
             return json(['msg' => '该用户有一个申请正在处理中，等待批复后再操作', 'status' => 6]);
         }

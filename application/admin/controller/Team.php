@@ -343,7 +343,7 @@ class Team extends Controller
      * "user_id": "9",
      * "member_name": "测试添加数据",
      * "number": "22",
-     * "create_date": "2019-04-14 16:06:49"
+     * "create_time": "2019-04-14 16:06:49"
      * }
      * }
      * @return \think\response\Json
