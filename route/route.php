@@ -14,12 +14,13 @@ Route::group('user', function () {
 
 //球队管理
 Route::group('team', function () {
-    Route::post('add_team', 'admin/team/addTeam');           //创建球队
-    Route::post('delete_team', 'admin/team/deleteTeam');     //删除球队
-    Route::post('update_team', 'admin/team/updateTeam');     //更新球队
-    Route::post('get_team_list', 'admin/team/getTeamList');  //获取球队列表
-    Route::post('get_team_by_id', 'admin/team/getTeamById'); //获取球队信息
-    Route::post('get_team_list_by_fuzzy', 'admin/team/getTeamListByFuzzy');   //根据球队名模糊查询
+    Route::post('add_team', 'admin/team/addTeam');                           //创建球队
+    Route::post('delete_team', 'admin/team/deleteTeam');                     //删除球队
+    Route::post('update_team', 'admin/team/updateTeam');                     //更新球队
+    Route::post('get_team_list', 'admin/team/getTeamList');                  //获取球队列表
+    Route::post('get_team_by_id', 'admin/team/getTeamById');                 //获取球队信息
+    Route::post('get_member_list', 'admin/team/getMemberList');              //获取球队的球员列表
+    Route::post('get_team_list_by_fuzzy', 'admin/team/getTeamListByFuzzy');  //根据球队名模糊查询
 })->middleware('app\http\middleware\Auth::class');
 
 //公告管理

@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\Member;
 use think\Controller;
 use app\admin\model\Team as TeamModel;
 use app\admin\model\Admin as AdminModel;
@@ -324,5 +325,36 @@ class Team extends Controller
             ->select();
 
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
+    }
+
+
+    /**
+     * @api {get} /team/get_member_list  查看球员列表
+     * @apiGroup  team
+     * @apiParam  {Number} team_id  球队编号.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getMemberList()
+    {
+        $rule     = [
+            'team_id|球队编号' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 2]);
+        }
+        $team_id     = input('team_id');
+        $member_info = Member::where('team_id', $team_id)
+            ->field('id, user_id, member_name, number ,create_time')
+            ->find();
+
+        return json(['msg' => '获取成功', 'status' => 1, 'data' => $member_info]);
     }
 }
