@@ -38,7 +38,7 @@ class Apply extends Controller
             'user_id|用户id'          => 'require|integer',
             'team_id|球队编号'          => 'require|integer',
             'apply_people|申请人'      => 'require',
-            'apply_reason|申请加入球队详情' => 'require|integer',
+            'apply_reason|申请加入球队详情' => 'require',
             'apply_number|申请的球衣号码'  => 'require|integer'
         ];
         $validate = Validate::make($rule);

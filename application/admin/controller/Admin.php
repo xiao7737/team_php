@@ -117,9 +117,9 @@ class Admin extends Controller
         if ($res) {
             $data = [
                 'user_id'  => $res['id'],
-                'is_admin' => $res['is_admin'],     //1 管理员，0 普通球员,-1 新注册用户，即非球员非管理员
-                'token'    => $res['id'] . '@' . time(),    //生成token  用户id@时间戳
-                'name'     => $res['name'],              //用户名
+                'is_admin' => $res['is_admin'],           //1 管理员，0 普通球员,-1 新注册用户，即非球员非管理员
+                'token'    => $res['id'] . '@' . time(),  //生成token  用户id@时间戳
+                'name'     => $res['name'],               //用户名
             ];
 
             $key   = 'auth_' . $res['id'];
