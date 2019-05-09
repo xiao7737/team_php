@@ -377,7 +377,7 @@ class Team extends Controller
         $team_id     = input('team_id');
         $member_info = Member::where('team_id', $team_id)
             ->field('id, user_id, member_name, number ,create_time')
-            ->find();
+            ->select();
 
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $member_info]);
     }
