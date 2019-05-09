@@ -80,6 +80,7 @@ class Admin extends Controller
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：登录成功，2：密码或账号错误，3：参数验证失败）
      * @apiSuccess {Number} is_admin （身份标识：-1普通注册，0球员，1及以上，代表创建的球队个数）.
+     * @apiSuccess {String} name 用户名.
      * @apiSuccessExample {json} Success-Response:
      *{
      * "msg": "登录成功",
@@ -87,6 +88,7 @@ class Admin extends Controller
      * "data": {
      * "user_id": 4,
      * "is_admin": 2
+     * "name": "张三"
      * }
      * }
      * @return \think\response\Json
@@ -109,7 +111,7 @@ class Admin extends Controller
         $pw      = Request::param('pw');
         $res     = AdminModel::where('account', $account)
             ->where('pw', md5($pw))
-            ->field('id, is_admin')
+            ->field('id, is_admin, name')
             ->find();
 
         if ($res) {

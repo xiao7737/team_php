@@ -78,6 +78,13 @@ class Apply extends Controller
     }
 
     //球队管理员同同意或者拒绝申请，同意则加入球员表
+
+    /**
+     *
+     * @return \think\response\Json
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
     public function updateApplyStatus()
     {
         $rule     = [
@@ -89,8 +96,18 @@ class Apply extends Controller
         if (!$result) {
             return json(['msg' => $validate->getError(), 'status' => 3]);
         }
-        $id = input('id');
+        $id     = input('id');
         $action = input('action');
+        switch ($action) {
+            case 2:   //拒绝申请
+                ApplyModel::where('id', $id)->update(['status' => 3]);
+                break;
+            case 1:   //同意申请
+                //step1  从申请表获取申请相关信息
+                $menber_id = ApplyModel::where('id',$id)
+                    ->field('user_id, team_id, apply_number, apply_people')->find();
+                //step2  从用户表获取
+        }
         //开启事务
     }
 }
