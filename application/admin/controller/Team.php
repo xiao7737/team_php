@@ -135,10 +135,59 @@ class Team extends Controller
         return json(['msg' => '获取成功', 'status' => 1, 'data' => $team_list]);
     }
 
-    //todo 更新球队信息
+
+    /**
+     * @api {post} /team/update_team  编辑球队
+     * @apiGroup  team
+     * * @apiParam {Number}   id     球队编号.
+     * @apiParam {String}   team_name     球队名.
+     * @apiParam {String}   description  球队简介.
+     * @apiParam {Number}   user_id    用户编号.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码：1：成功，2：失败，3：参数验证失败，4：该球队名已经被注册
+     * @return \think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function updateTeam()
     {
-        return 'updateTeam';
+        $rule     = [
+            'id|球队编号'          => 'require|integer',
+            'team_name|球队名'    => 'require',
+            'description|球队描述' => 'require',
+            'user_id|创建人id'    => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $id               = Request::param('id');
+        $team_name        = Request::param('team_name');
+        $description      = Request::param('description');
+        $create_people_id = Request::param('user_id');
+
+        $data = TeamModel::where('team_name', $team_name)->find();
+        if ($data) {
+            return json(['msg' => '该球队名已经被注册，请换一个球队名吧！', 'status' => 4]);
+        }
+
+        $res = TeamModel::where('id', $id)->update([
+            'team_name'        => $team_name,
+            'description'      => $description,
+            'create_people_id' => $create_people_id,
+        ]);
+
+        $team_info = TeamModel::where('id', $id)->find();
+
+        if ($res) {
+            return json(['msg' => '编辑成功', 'status' => 1, 'data' => $team_info]);
+        } else {
+            return json(['msg' => '编辑失败，稍后重试', 'status' => 2, 'data' => $team_info]);
+        }
     }
 
 

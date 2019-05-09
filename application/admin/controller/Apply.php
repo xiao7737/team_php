@@ -26,7 +26,7 @@ class Apply extends Controller
      * @apiParam {Number}   apply_reason  申请详情.
      * @apiParam {Number}   apply_number  申请的球衣号码.
      * @apiSuccess {String} msg 详细信息.
-     * @apiSuccess {Number} status 状态码：1：申请成功，2：申请失败，3：参数验证失败，4：申请的号码重复
+     * @apiSuccess {Number} status 状态码：1：申请成功，2：申请失败，3：参数验证失败，4：申请的号码重复，5：该用户没有申请加入球队的权限
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -56,6 +56,11 @@ class Apply extends Controller
         $is_exist = MemberModel::where('team_id', $team_id)->where('number', $apply_number)->find();
         if ($is_exist) {
             return json(['msg' => '申请的球衣号码重复，请重新选择', 'status' => 4]);
+        }
+        //申请加入球队的用户，用户标识为-1
+        $res = AdminModel::where('id', $user_id)->where('is_admin', -1)->find();
+        if (!$res) {
+            return json(['msg' => '该用户没有申请加入球队的权限', 'status' => 5]);
         }
 
         $apply = new ApplyModel();
@@ -165,8 +170,32 @@ class Apply extends Controller
     }
 
 
-    //todo 申请人查看申请结果，返回申请表信息
+    /**
+     * @api {get} /apply/getOneApply  用户查看审批详情
+     * @apiGroup  apply
+     * @apiParam {Number}   user_id  用户编号.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码：1：成功，3：参数验证失败
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getOneApply()
     {
+        $rule     = [
+            'user_id|用户编号' => 'require|integer',
+        ];
+        $validate = Validate::make($rule);
+        $result   = $validate->check(input('param.'));
+        if (!$result) {
+            return json(['msg' => $validate->getError(), 'status' => 3]);
+        }
+        $user_id = input('user_id');
+
+        $applyInfo = ApplyModel::where('user_id', $user_id)
+            ->field('apply_people, apply_number, status, create_time as create_date')->find();
+
+        return json(['msg' => "获取成功", 'status' => 1, 'data' => $applyInfo]);
     }
 }
