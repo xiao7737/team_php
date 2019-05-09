@@ -147,6 +147,16 @@ class Apply extends Controller
 
 
     /**
+     * @api {get} /apply/get_apply_list  用户查看审批详情
+     * @apiGroup  apply
+     * @apiParam {Number}   team  球队编号.
+     * @apiSuccess {String} msg 详细信息.
+     * @apiSuccess {Number} status 状态码：1：成功，3：参数验证失败
+     * @apiSuccess {String} apply_people 申请人
+     * @apiSuccess {String} apply_reason 申请理由
+     * @apiSuccess {String} create_time  申请时间
+     * @apiSuccess {Number} apply_number  球衣号码
+     * @apiSuccess {Number} status  申请状态：1待审批，2已经同意，3已经拒绝
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -164,18 +174,28 @@ class Apply extends Controller
         }
         $team_id = input('team_id');
 
-        //todo 对三种状态的申请分组
-        $applyInfo = ApplyModel::where('team_id', $team_id)->select();
+        //对三种状态的申请进行分组查询
+        $applyInfo = ApplyModel::where('team_id', $team_id)
+            ->field('id, apply_people, apply_reason, create_time, apply_number, status')
+            ->group('status')
+            ->order('create_time', 'desc')
+            ->select();
+
         return json(['msg' => "获取成功", 'status' => 1, 'data' => $applyInfo]);
     }
 
 
     /**
-     * @api {get} /apply/getOneApply  用户查看审批详情
+     * @api {get} /apply/get_one_apply  用户查看审批详情
      * @apiGroup  apply
      * @apiParam {Number}   user_id  用户编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码：1：成功，3：参数验证失败
+     * @apiSuccess {String} apply_people 申请人
+     * @apiSuccess {String} apply_reason 申请理由
+     * @apiSuccess {String} create_time  申请时间
+     * @apiSuccess {Number} apply_number  球衣号码
+     * @apiSuccess {Number} status  申请状态：1待审批，2已经同意，3已经拒绝
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -194,7 +214,7 @@ class Apply extends Controller
         $user_id = input('user_id');
 
         $applyInfo = ApplyModel::where('user_id', $user_id)
-            ->field('apply_people, apply_number, status, create_time as create_date')->find();
+            ->field('apply_people, apply_number, status, apply_reason, create_time')->find();
 
         return json(['msg' => "获取成功", 'status' => 1, 'data' => $applyInfo]);
     }
