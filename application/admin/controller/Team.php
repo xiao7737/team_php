@@ -334,6 +334,18 @@ class Team extends Controller
      * @apiParam  {Number} team_id  球队编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     * "msg": "获取成功",
+     * "status": 1,
+     * "data": {
+     * "id": 2,
+     * "user_id": "9",
+     * "member_name": "测试添加数据",
+     * "number": "22",
+     * "create_date": "2019-04-14 16:06:49"
+     * }
+     * }
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException

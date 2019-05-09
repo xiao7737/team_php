@@ -26,7 +26,7 @@ class Apply extends Controller
      * @apiParam {Number}   apply_reason  申请详情.
      * @apiParam {Number}   apply_number  申请的球衣号码.
      * @apiSuccess {String} msg 详细信息.
-     * @apiSuccess {Number} status 状态码：1：申请成功，2：申请失败，3：参数验证失败，4：申请的号码重复，5：该用户没有申请加入球队的权限
+     * @apiSuccess {Number} status 状态码：1：申请成功，2：申请失败，3：参数验证失败，4：申请的号码重复，5：该用户没有申请加入球队的权限，6：该用户有一个申请正在处理中，等待批复后再操作
      * @return \think\response\Json
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -61,6 +61,11 @@ class Apply extends Controller
         $res = AdminModel::where('id', $user_id)->where('is_admin', -1)->find();
         if (!$res) {
             return json(['msg' => '该用户没有申请加入球队的权限', 'status' => 5]);
+        }
+        //正在申请中状态下不允许申请
+        $status = ApplyModel::where('user_id', $user_id)->where('staus', 1)->find();
+        if ($status) {
+            return json(['msg' => '该用户有一个申请正在处理中，等待批复后再操作', 'status' => 6]);
         }
 
         $apply = new ApplyModel();
