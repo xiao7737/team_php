@@ -237,7 +237,6 @@ class Team extends Controller
     /**
      * @api {post} /team/get_team_by_id  根据id获取球队信息
      * @apiGroup  team
-     * @apiParam {Number}   user_id     创建人id.
      * @apiParam {Number}   id     球队id.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：获取成功，2：参数验证失败）
@@ -260,7 +259,6 @@ class Team extends Controller
     public function getTeamById()
     {
         $rule     = [
-            'user_id|用户id' => 'require|integer',
             'id|球队id'      => 'require|integer',
         ];
         $validate = Validate::make($rule);
@@ -269,9 +267,7 @@ class Team extends Controller
             return json(['msg' => $validate->getError(), 'status' => 2]);
         }
         $id        = input('id');
-        $user_id   = input('user_id');
-        $team_data = TeamModel::where('create_people_id', $user_id)
-            ->where('id', $id)
+        $team_data = TeamModel::where('id', $id)
             ->field('id, team_name, description, create_time as create_date')
             ->find();
 
