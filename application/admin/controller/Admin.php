@@ -81,6 +81,9 @@ class Admin extends Controller
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码（1：登录成功，2：密码或账号错误，3：参数验证失败）
      * @apiSuccess {Number} is_admin （身份标识：-1普通注册，0球员，1及以上，代表创建的球队个数）.
+     * @apiSuccess {String} token 认证信息.
+     * @apiSuccess {String} name 用户名.
+     * @apiSuccess {Number} team_id 球队编号，如果不是球员则默认为''.
      * @apiSuccess {String} name 用户名.
      * @apiSuccessExample {json} Success-Response:
      *{
@@ -88,8 +91,10 @@ class Admin extends Controller
      * "status": 1,
      * "data": {
      * "user_id": 4,
-     * "is_admin": 2
-     * "name": "张三"
+     * "is_admin": 2,
+     * "token":4@65654765,
+     * "name": "张三",
+     * "team_id":7
      * }
      * }
      * @return \think\response\Json
