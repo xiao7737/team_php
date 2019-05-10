@@ -157,6 +157,7 @@ class Apply extends Controller
      * @apiParam {Number}   team_id  球队编号.
      * @apiSuccess {String} msg 详细信息.
      * @apiSuccess {Number} status 状态码：1：成功，3：参数验证失败
+     * @apiSuccess {Number} user_id 申请人编号
      * @apiSuccess {String} apply_people 申请人
      * @apiSuccess {String} apply_reason 申请理由
      * @apiSuccess {String} create_time  申请时间
@@ -181,7 +182,7 @@ class Apply extends Controller
 
         //对三种状态的申请进行分组查询
         $applyInfo = ApplyModel::where('team_id', $team_id)
-            ->field('id, apply_people, apply_reason, create_time, apply_number, status')
+            ->field('id, user_id, apply_people, apply_reason, create_time, apply_number, status')
             ->group('status')
             ->order('create_time', 'desc')
             ->select();
