@@ -37,16 +37,19 @@ class Match extends Controller
         if (!$result) {
             return json(['msg' => $validate->getError(), 'status' => 3]);
         }
+        $team_id       = input('team_id');
         $match_team    = input('match_team');
         $match_time    = input('match_time');
         $match_address = input('match_address');
 
         $match = new MatchModel();
         $res   = $match->save([
+            'team_id'       => $team_id,
             'match_team'    => $match_team,
             'match_time'    => $match_time,
             'match_address' => $match_address,
         ]);
+
         if ($res) {
             return json(['msg' => '添加比赛成功', 'status' => 1]);
         } else {
